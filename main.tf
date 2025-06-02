@@ -42,6 +42,12 @@ resource "azurerm_container_app_environment" "main" {
     maximum_count         = 1
   }
 
+  workload_profile {
+    name                  = "E8"
+    workload_profile_type = "E8"
+    maximum_count         = 1
+  }
+
   log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
 }
 
@@ -65,6 +71,8 @@ resource "azurerm_storage_share" "extensions" {
 
 resource "azurerm_container_app_environment_storage" "data" {
   name                         = "sonarqube-data"
+  account_name                 = azurerm_storage_account.main.name
+  access_key                   = azurerm_storage_account.main.primary_access_key
   container_app_environment_id = azurerm_container_app_environment.main.id
   share_name                   = azurerm_storage_share.data.name
   access_mode                  = "ReadWrite"
@@ -72,6 +80,8 @@ resource "azurerm_container_app_environment_storage" "data" {
 
 resource "azurerm_container_app_environment_storage" "logs" {
   name                         = "sonarqube-logs"
+  account_name                 = azurerm_storage_account.main.name
+  access_key                   = azurerm_storage_account.main.primary_access_key
   container_app_environment_id = azurerm_container_app_environment.main.id
   share_name                   = azurerm_storage_share.logs.name
   access_mode                  = "ReadWrite"
@@ -79,6 +89,8 @@ resource "azurerm_container_app_environment_storage" "logs" {
 
 resource "azurerm_container_app_environment_storage" "extensions" {
   name                         = "sonarqube-extensions"
+  account_name                 = azurerm_storage_account.main.name
+  access_key                   = azurerm_storage_account.main.primary_access_key
   container_app_environment_id = azurerm_container_app_environment.main.id
   share_name                   = azurerm_storage_share.extensions.name
   access_mode                  = "ReadWrite"
@@ -91,6 +103,8 @@ resource "azurerm_container_app" "sonarqube" {
 
   revision_mode = "Single"
 
+  workload_profile_name = "E8"
+
   ingress {
     external_enabled = true
     target_port      = 9000
@@ -101,9 +115,11 @@ resource "azurerm_container_app" "sonarqube" {
   }
 
   template {
+    min_replicas = 1
+
     container {
       name   = "sonarqube"
-      image  = "sonarqube:9.9.8-community"
+      image  = "sonarqube:lts"
       cpu    = "4"
       memory = "16Gi"
 
@@ -135,9 +151,10 @@ resource "azurerm_container_app" "sonarqube" {
     }
 
     volume {
-      name         = "data"
-      storage_type = "AzureFile"
-      storage_name = azurerm_container_app_environment_storage.data.name
+      name          = "data"
+      storage_type  = "AzureFile"
+      storage_name  = azurerm_container_app_environment_storage.data.name
+      mount_options = "dir_mode=0777,file_mode=0777,uid=1000,gid=1000,mfsymlinks,cache=strict,nosharesock"
     }
     volume {
       name         = "logs"
