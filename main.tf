@@ -37,12 +37,6 @@ resource "azurerm_container_app_environment" "main" {
   location            = azurerm_resource_group.main.location
 
   workload_profile {
-    name                  = "default"
-    workload_profile_type = "E4"
-    maximum_count         = 1
-  }
-
-  workload_profile {
     name                  = "E8"
     workload_profile_type = "E8"
     maximum_count         = 1
@@ -115,7 +109,7 @@ resource "azurerm_container_app" "sonarqube" {
   }
 
   template {
-    min_replicas = 1
+    min_replicas = 0
 
     container {
       name   = "sonarqube"
