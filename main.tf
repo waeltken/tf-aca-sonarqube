@@ -2,6 +2,11 @@ provider "azurerm" {
   features {}
 }
 
+terraform {
+  backend "azurerm" {
+  }
+}
+
 resource "random_string" "suffix" {
   length  = 4
   special = false
