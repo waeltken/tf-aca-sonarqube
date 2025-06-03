@@ -109,7 +109,7 @@ resource "azurerm_container_app" "sonarqube" {
   }
 
   template {
-    min_replicas = 0
+    min_replicas = 1
 
     container {
       name   = "sonarqube"
@@ -156,9 +156,10 @@ resource "azurerm_container_app" "sonarqube" {
       storage_name = azurerm_container_app_environment_storage.logs.name
     }
     volume {
-      name         = "extensions"
-      storage_type = "AzureFile"
-      storage_name = azurerm_container_app_environment_storage.extensions.name
+      name          = "extensions"
+      storage_type  = "AzureFile"
+      storage_name  = azurerm_container_app_environment_storage.extensions.name
+      mount_options = "dir_mode=0777,file_mode=0777,uid=1000,gid=1000,mfsymlinks,cache=strict,nosharesock"
     }
   }
 }
