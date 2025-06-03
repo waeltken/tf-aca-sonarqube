@@ -151,9 +151,10 @@ resource "azurerm_container_app" "sonarqube" {
       mount_options = "dir_mode=0777,file_mode=0777,uid=1000,gid=1000,mfsymlinks,cache=strict,nosharesock"
     }
     volume {
-      name         = "logs"
-      storage_type = "AzureFile"
-      storage_name = azurerm_container_app_environment_storage.logs.name
+      name          = "logs"
+      storage_type  = "AzureFile"
+      storage_name  = azurerm_container_app_environment_storage.logs.name
+      mount_options = "dir_mode=0777,file_mode=0777,uid=1000,gid=1000,mfsymlinks,cache=strict,nosharesock"
     }
     volume {
       name          = "extensions"
