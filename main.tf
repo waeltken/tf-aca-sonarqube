@@ -27,8 +27,9 @@ resource "azurerm_storage_account" "main" {
   name                     = "sonarqubestorage${random_string.suffix.result}"
   location                 = azurerm_resource_group.main.location
   resource_group_name      = azurerm_resource_group.main.name
-  account_tier             = "Standard"
+  account_tier             = "Premium"
   account_replication_type = "LRS"
+  account_kind             = "FileStorage"
 }
 
 resource "azurerm_container_app_environment" "main" {
@@ -48,19 +49,25 @@ resource "azurerm_container_app_environment" "main" {
 resource "azurerm_storage_share" "data" {
   name               = "sonarqube-data"
   storage_account_id = azurerm_storage_account.main.id
-  quota              = 5
+  quota              = 100
+
+  enabled_protocol = "NFS"
 }
 
 resource "azurerm_storage_share" "logs" {
   name               = "sonarqube-logs"
   storage_account_id = azurerm_storage_account.main.id
-  quota              = 5
+  quota              = 100
+
+  enabled_protocol = "NFS"
 }
 
 resource "azurerm_storage_share" "extensions" {
   name               = "sonarqube-extensions"
   storage_account_id = azurerm_storage_account.main.id
-  quota              = 5
+  quota              = 100
+
+  enabled_protocol = "NFS"
 }
 
 resource "azurerm_container_app_environment_storage" "data" {
