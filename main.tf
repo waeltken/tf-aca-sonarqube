@@ -76,8 +76,9 @@ resource "azurerm_container_app_environment" "main" {
     maximum_count         = 1
   }
 
-  infrastructure_subnet_id   = azurerm_subnet.aca.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
+  internal_load_balancer_enabled = true
+  infrastructure_subnet_id       = azurerm_subnet.aca.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.main.id
 }
 
 resource "azurerm_storage_share" "data" {
