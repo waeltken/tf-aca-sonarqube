@@ -75,9 +75,10 @@ resource "azurerm_container_app_environment" "main" {
     name                  = "E8"
     workload_profile_type = "E8"
     maximum_count         = 1
+    minimum_count         = 0
   }
 
-  internal_load_balancer_enabled = true
+  internal_load_balancer_enabled = false
   infrastructure_subnet_id       = azurerm_subnet.aca.id
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.main.id
 }
