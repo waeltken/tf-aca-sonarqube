@@ -1,4 +1,5 @@
 provider "azurerm" {
+  subscription_id = "eedea4b7-9139-440d-84b1-0b09522f109e"
   features {}
 }
 
@@ -167,18 +168,18 @@ resource "azurerm_container_app" "sonarqube" {
         path = "/opt/sonarqube/extensions"
       }
 
-      # env {
-      #   name  = "SONAR_JDBC_URL"
-      #   value = "jdbc:postgresql://<your-postgres-server>:5432/sonarqube"
-      # }
-      # env {
-      #   name  = "SONAR_JDBC_USERNAME"
-      #   value = "<your-db-username>"
-      # }
-      # env {
-      #   name  = "SONAR_JDBC_PASSWORD"
-      #   value = "<your-db-password>"
-      # }
+      env {
+        name  = "SONAR_JDBC_URL"
+        value = "jdbc:postgresql://<your-postgres-server>:5432/sonarqube"
+      }
+      env {
+        name  = "SONAR_JDBC_USERNAME"
+        value = "<your-db-username>"
+      }
+      env {
+        name  = "SONAR_JDBC_PASSWORD"
+        value = "<your-db-password>"
+      }
     }
 
     volume {
